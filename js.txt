@@ -1,0 +1,204 @@
+
+
+// Setting Up Variables
+
+let theInput = document.querySelector('.add-task input');
+let theAddButton = document.querySelector('.add-task .plus');
+let taskContainer = document.querySelector('.tasks-content');
+let noTasksMsg = document.querySelector('.no-tasks-message');
+let taskCount = document.querySelector('.tasks-count span');
+let tasksCompleted = document.querySelector('.tasks-completed span');
+let deleteAll = document.getElementById('delete-all');
+
+
+// Focus On Input Field
+window.onload = function() {
+    theInput.focus();
+};
+
+
+let myArray = []
+
+function addTask() {
+    let mainDiv = document.createElement('div');
+    // Add Class Name To MAin Div
+    mainDiv.className = 'mainDiv'
+    // Create Span Element
+    let mainSpan = document.createElement('span');
+    // Create Delete Span
+    let deleteElement = document.createElement('span');
+    // Create The Text Span
+    let text = document.createTextNode(theInput.value);
+    // Create The Delete Text Button
+    let deleteText = document.createTextNode("Delete");
+    // Add Text To Span
+    mainSpan.appendChild(text);
+    // Add Class To Span
+    mainSpan.className = 'task-box';
+    // Add Text To Delete Button
+    deleteElement.appendChild(deleteText);
+    // Add Class To Delete Button
+    deleteElement.className = 'delete';
+    // Add THe Task To The Container
+    mainDiv.appendChild(mainSpan)
+    // Add Delete Button To Main Span 
+    mainDiv.appendChild(deleteElement);
+    // Add Main Div To Task Container
+    taskContainer.appendChild(mainDiv)
+    // Empty The Input 
+    theInput.value = '';
+    // Foucs On Field
+    theInput.focus();
+    claculateTasks()
+    // Show Delete All Button
+    deleteAll.style.display = 'block';
+}
+
+
+// Adding The Task
+theAddButton.onclick = function() {
+    if (theInput.value === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Add Your Task Name Plz...',
+            })
+    }else {
+        let noTasksMsg = document.querySelector('.no-tasks-message');
+        // Check If Span With No Tasks Message IS Exist
+        if (document.body.contains(document.querySelector('.no-tasks-message'))) {
+            noTasksMsg.remove()
+        }
+
+        console.log(taskContainer.hasChildNodes());
+        if (!taskContainer.hasChildNodes()) { // if container tasks is empty , add task
+
+            console.log('yes');
+            addTask()
+
+        }else {// if container tasks not empty
+
+            // Create Main Div For Text And Delete Spans
+            let mainArray = document.querySelectorAll('.tasks-content .mainDiv .task-box ')
+
+            for ( let i = 0; i < mainArray.length; i++) {
+                
+                if (theInput.value === mainArray[i].innerText) {
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Add Your Task Name Plz...',
+                    })
+                    
+                }else {
+                    
+                    console.log('done');
+                    addTask()
+                    
+                }
+            }
+        }
+    }
+}
+
+taskContainer.addEventListener('click', function (e) {
+console.log('ff');
+    // Delete Task
+    if (e.target.className == 'delete') {
+        // Remove Current Task
+        e.target.parentNode.remove();
+        // Check Number OF task Inside The Container
+        if (taskContainer.childElementCount == 0){
+            createNoTasks()
+        }
+    }
+    // Finish Task
+    if (e.target.classList.contains('task-box')) {
+        // Toggle Class finished
+        e.target.classList.toggle("finished");
+    }
+    // Calculate Tasks
+    claculateTasks()
+})
+
+
+// document.querySelector('.delete').addEventListener('click', (e) => {
+
+//     if (e.target.className == 'delete') {
+//         // Remove Current Task
+//         e.target.parentNode.remove();
+//         // Check Number OF task Inside The Container
+//         if (taskContainer.childElementCount == 0){
+//             createNoTasks()
+//         }
+//     }
+
+// })
+
+
+
+deleteAll.onclick =  function () {
+    
+    let tasks = document.querySelectorAll('.tasks-content > .mainDiv')
+    for (let i = 0; i < tasks.length; i++) {
+        tasks[i].remove()
+    }
+    deleteAll.style.display = 'none'
+}
+
+
+// nader example
+// const names = ["adel", "nader", "wolvreen"] // amr
+
+// for (let i = 0; i < names.length; i++) {
+
+//     if (names[2] === 'nader') {
+//         names[i] = 'amr'
+//     }
+
+// }
+// console.log(names);
+
+// Function To Delete No Task Message
+function createNoTasks() {
+
+    // Create Message Span Element
+    let msgSpan = document.createElement('span')
+
+    // Create The Text Message
+    let msgText = document.createTextNode('No Tasks To Show');
+
+    // Add Text To Message Span Element
+    msgSpan.appendChild(msgText);
+
+    // Add Class To Message Span
+    msgSpan.className = 'no-tasks-message';
+
+    // Append The Message Span Element To The Task Container
+    taskContainer.appendChild(msgSpan)
+}
+
+
+// Function To Calculate Tasks
+function claculateTasks() {
+
+    // Calculate All Tasks
+    taskCount.innerHTML = document.querySelectorAll('.tasks-content .task-box').length;
+
+    // Calculate completed Tasks
+    tasksCompleted.innerHTML = document.querySelectorAll('.tasks-content .finished').length;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
